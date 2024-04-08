@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class User {
@@ -6,15 +7,16 @@ public class User {
     private String user_name ; // all username should be different .
     private int password ;
     private String email ;
-    private ArrayList<Comment> comments ;
-    private ArrayList<User> friends ;
-    private ArrayList<Subreddit> joined_subreddits ;
-    private ArrayList<Post> up_voted_post ;
-    private ArrayList<Subreddit> user_subreddits ;
-    private ArrayList<Post> down_voted_post ;
+    private ArrayList<Comment> comments = new ArrayList<>();
+    private ArrayList<User> friends = new ArrayList<>();
+    private ArrayList<Subreddit> joined_subreddits = new ArrayList<>();
+    private ArrayList<Post> up_voted_post = new ArrayList<>();
+    private ArrayList<Subreddit> user_subreddits = new ArrayList<>();
+    private ArrayList<Post> down_voted_post = new ArrayList<>();
     private UUID uuid ;
+    ArrayList<Post> created_posts = new ArrayList<>();
     private String bio ;
-    private ArrayList<Post> created_posts ;
+
     private Post[] timeline ;
 
     public Post[] getTimeline() {
@@ -24,7 +26,6 @@ public class User {
     public void setTimeline(Post[] timeline) {
         this.timeline = timeline;
     }
-
     public User(String name, String user_name, String password, String email , UUID uuid) {
         this.name = name;
         this.user_name = user_name;
@@ -32,68 +33,96 @@ public class User {
         this.email = email;
         this.uuid = uuid ;
         timeline = new Post[10] ;
-        comments = new ArrayList<>() ;
-        friends = new ArrayList<>() ;
-        up_voted_post = new ArrayList<>() ;
-        down_voted_post = new ArrayList<>() ;
-        created_posts = new ArrayList<>() ;
+    }
+    public ArrayList<Post> getCreatedPosts() {
+        return created_posts;
     }
 
-    public void Show_Admin_Subreddit()
-    {
-        for (Subreddit subreddit : user_subreddits)
-        {
-            System.out.print("  ");
-            System.out.println(subreddit.getName());
-        }
+    public void setCreatedPosts(ArrayList<Post> created_posts) {
+        this.created_posts = created_posts;
     }
 
-    public void Show_Joined_Subreddits ()
-    {
-        for (Subreddit subreddit : joined_subreddits)
-        {
-            System.out.print("  *");
-            System.out.println(subreddit.getName());
-        }
-    }
 
-    public void Show_friends()
+    public void showAdminSubreddit()
     {
-        for (User user : friends)
-        {
-            System.out.print("  *");
-            System.out.println(user.getUser_name());
+        int i = 1 ;
+        if (!user_subreddits.isEmpty()) {
+            for (Subreddit subreddit : user_subreddits) {
+                System.out.print("   " + i );
+                System.out.println(subreddit.getName());
+                i++;
+            }
+        } else {
+            System.out.println("nothing yet");
         }
     }
 
-    public void Show_up_voted_post()
+    public void showJoinedSubreddits ()
     {
-        for (Post post : up_voted_post)
-        {
-            System.out.print("  *");
-            System.out.println(post.getTitle());
+        int i = 1;
+        if (!joined_subreddits.isEmpty()) {
+            for (Subreddit subreddit : joined_subreddits) {
+                System.out.print("   " + i);
+                System.out.println(subreddit.getName());
+                i++ ;
+            }
+        } else {
+            System.out.println("    nothing yet");
         }
     }
-    public void Show_down_voted_post()
+
+    public void showFriends()
     {
-        for (Post post : down_voted_post)
-        {
-            System.out.print("  *");
-            System.out.println(post.getTitle());
+        int i = 1 ;
+        if (!friends.isEmpty()) {
+            for (User user : friends) {
+                System.out.print("   " + i);
+                System.out.println(user.getUserName());
+                i++;
+            }
+        } else {
+            System.out.println("    nothing yet");
         }
     }
-    public String getUser_name() {
+
+    public void showUpVotedPost()
+    {
+        int i = 1 ;
+        if (!up_voted_post.isEmpty()) {
+            for (Post post : up_voted_post) {
+                System.out.print("   " + i);
+                System.out.println(post.getTitle());
+                i++ ;
+            }
+        } else {
+            System.out.println("    nothing yet");
+        }
+    }
+    public void showDownVotedPost()
+    {
+        int i = 1 ;
+        if (down_voted_post.isEmpty()) {
+            for (Post post : down_voted_post) {
+                System.out.print("   " + i);
+                System.out.println(post.getTitle());
+                i++;
+            }
+        } else {
+            System.out.println("    nothing yet");
+        }
+    }
+    public String getUserName() {
         return user_name;
     }
 
-    public void Add_user_subreddits (Subreddit subreddit)
+    public void addUserSubreddits(Subreddit subreddit)
     {
-        user_subreddits.add(subreddit) ;
+        joined_subreddits.add(subreddit) ;
     }
 
-    public void Join_Subreddit (Subreddit subreddit){joined_subreddits.add(subreddit) ; }
+    public void joinSubreddit(Subreddit subreddit){joined_subreddits.add(subreddit) ; }
 
-    public void setUser_name(String user_name) {
+    public void setUserName(String user_name) {
         this.user_name = user_name;
     }
 
@@ -173,11 +202,11 @@ public class User {
         return user_subreddits;
     }
 
-    public void setUser_subreddits(ArrayList<Subreddit> user_subreddits) {
+    public void setUserSubreddits(ArrayList<Subreddit> user_subreddits) {
         this.user_subreddits = user_subreddits;
     }
 
-    public void Add_Comments (Comment comment)
+    public void addComments(Comment comment)
     {
         comments.add(comment);
     }
@@ -190,27 +219,44 @@ public class User {
         }
     }
 
-    public void Show_Profile ()
+    public void showProfile()
     {
-        System.out.println(user_name);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Name : " + name);
+        System.out.println("user_name : " + user_name);
+        System.out.println("email : " + email);
+        System.out.println("bio : " + bio);
         System.out.println("admin subreddit : ");
-        Show_Admin_Subreddit();
+        showAdminSubreddit();
         System.out.println("joined subreddit : ");
-        Show_Joined_Subreddits();
+        showJoinedSubreddits();
         System.out.println("comments : ");
-        Show_Comments();
-
+        showComments();
+        System.out.println("1- admin subreddit");
+        System.out.println("2- joined subreddit");
+        System.out.println("3- comments");
+        String options = scanner.next();
     }
 
-    public void Show_Comments ()
+    public void showComments ()
     {
-        for (Comment comment : comments)
-        {
-            System.out.printf("%-40s", comment.getText()); // This will output "42        "
-            System.out.printf("%-5s", comment.getLikes());
-            System.out.print(" likes   ");
-            System.out.printf("%-5s", comment.getDislikes());
-            System.out.println(" dislikes");
+        int i = 1 ;
+        if (!comments.isEmpty()) {
+            for (Comment comment : comments) {
+                System.out.println("subreddit : " + comment.getPost().getSubreddit().getName());
+                System.out.printf("%-40s", comment.getText()); // This will output "42        "
+                System.out.printf("%-5s", comment.getLikes());
+                System.out.println(" likes   ");
+                System.out.printf("%-5s", comment.getDislikes());
+                System.out.println(" dislikes");
+            }
+        } else {
+            System.out.println("    nothing yet");
         }
+    }
+
+    public void addUserPost (Post post)
+    {
+        created_posts.add(post) ;
     }
 }

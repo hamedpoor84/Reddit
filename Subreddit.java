@@ -5,18 +5,17 @@ import java.util.UUID;
 public class Subreddit {
     private String name ;
     private User creator ;
-    private ArrayList<User> users ;
-    private ArrayList<Post> posts ;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Post> posts = new ArrayList<>();
+    private ArrayList<User> admins = new ArrayList<>();
     private UUID uuid ;
     private String info;
-    private ArrayList<User> admins ;
     private int member_number ;
 
     public Subreddit(String name, User creator , String info , UUID uuid) {
         this.info = info;
         this.name = name;
         this.creator = creator;
-        admins = new ArrayList<>();
         admins.add(creator) ;
         this.uuid = uuid ;
         member_number = 1 ;
@@ -24,10 +23,15 @@ public class Subreddit {
 
     public void ShowPosts ()
     {
-        for (Post post : posts)
-        {
-            System.out.print("   *");
-            System.out.println(post.getTitle() + "  " + post.getLikes() + " likes" + post.getDislikes() + " dislike Code : " + post.getUuid() );
+        int i = 1 ;
+        if (!posts.isEmpty()) {
+            for (Post post : posts) {
+                System.out.print("   " + i + "- " );
+                System.out.println(post.getTitle() + "  " + post.getLikes() + " likes" + post.getDislikes() + " dislike Code : " + post.getUuid());
+                i++ ;
+            }
+        } else {
+            System.out.println("nothing yet");
         }
     }
     public void AddAdmin (User user)
@@ -94,7 +98,7 @@ public class Subreddit {
     {
         for (User user : admins)
         {
-            if (user.getUser_name().equals(user_name))
+            if (user.getUserName().equals(user_name))
             {
                 return user ;
             }
@@ -189,13 +193,16 @@ public class Subreddit {
         System.out.println(post.getTitle() + "  " + post.getLikes() + " likes" + post.getDislikes() + " dislike Code : " + post.getUuid());
     }
 
-    public void forShowSubreddit (){
-        System.out.printf("%10s" , name);
-        System.out.println(member_number + " member" + "Code : " + uuid);
-        System.out.println("Infor : " + info);
-        System.out.print("Posts : ");
+    public void Show (){
+        System.out.print("name : ");
+        System.out.printf("%-10s" , name);
+        System.out.println(member_number + " member   " + "Code : " + uuid);
+        System.out.println("Info : " + info);
+        System.out.println("Posts : ");
         ShowPosts();
     }
+
+
 
 
 }

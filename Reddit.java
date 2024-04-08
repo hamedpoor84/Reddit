@@ -2,31 +2,33 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class Reddit {
-    private ArrayList<User> users;
-    private ArrayList<Post> posts;
-    private ArrayList<Subreddit> subreddits;
-    private ArrayList<UUID> uuids;
-    public boolean LogInUser() {
+    private final ArrayList<User> users = new ArrayList<>();
+    private final ArrayList<Post> posts = new ArrayList<>();
+    private final ArrayList<Subreddit> subreddits = new ArrayList<>();
+    private final ArrayList<UUID> uuids = new ArrayList<>();
+    public User LogInUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("email : ");
-        String email = scanner.next();
+        String email = scanner.nextLine();
         System.out.print("password : ");
-        String password = scanner.next();
+        int password = scanner.nextLine().hashCode();
         for (User user : users) {
             if (email.equals(user.getEmail())) {
-                if (password.hashCode() == user.getPassword()) {
-                    return true;
+                if (password == user.getPassword()) {
+                    return  user;
                 }
                 System.out.println("your password is incorrect .");
-                return false;
+                return null;
             }
         }
         System.out.println("your email not found . ");
-        return false;
+        return null;
     }
 
-    public void SignUpUser() {
+
+    public User SignUpUser() {
         UUID uuid = UUID.randomUUID() ;
         uuids.add(uuid);
         Scanner scanner = new Scanner(System.in);
@@ -41,10 +43,32 @@ public class Reddit {
         if (CheckUsername(user_name) && CheckEmail(email) && IsValidEmail(email)) {
             User user = new User(name, user_name, password, email , uuid);
             users.add(user);
+            return user;
         } else {
             System.out.println("Your signup does not successful");
+            return null;
         }
     }
+
+
+    public void viewSubreddits ()
+    {
+        for (int i = 0 ; i < subreddits.size() ; i++)
+        {
+            System.out.println(i+1 + "- " + subreddits.get(i).getName());
+        }
+    }
+
+
+    public void fakeRed (){
+    User user = new User("hamed" , "Hamedpoor84" , "hamed2384" , "hamedpoor84@gmail.com" , UUID.randomUUID());
+    User user1 = new User("mobin" , "mobin84" , "mmmmmmmm" , "mobin@gmail.com" , UUID.randomUUID());
+    User user2 = new User("amin" , "amin83" , "aaaaaaaa" , "aminghu@gmail.com" , UUID.randomUUID());
+    users.add(user);
+    users.add(user1);
+    users.add(user2);
+    }
+
 
     public static boolean IsValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
@@ -55,7 +79,7 @@ public class Reddit {
 
     public boolean CheckUsername(String user_name) {
         for (User user : users) {
-            if (user.getUser_name().equals(user_name)) {
+            if (user.getUserName().equals(user_name)) {
                 return false;
             }
         }
@@ -73,17 +97,17 @@ public class Reddit {
 
     public boolean UserExistence(String user_name) {
         for (User user : users) {
-            if (user.getUser_name().equals(user_name)) {
+            if (user.getUserName().equals(user_name)) {
                 return true;
             }
         }
         return false;
     }
 
-    public User FindUser(String user_name) // for find and use users // i don't know should I use password or no .
+    public User findUser(String user_name) // for find and use users // i don't know should I use password or no .
     {
         for (User user : users) {
-            if (user.getUser_name().equals(user_name)) {
+            if (user.getUserName().equals(user_name)) {
                 return user;
             }
         }
@@ -136,8 +160,8 @@ public class Reddit {
         System.out.print("user_name: ");
         String user_name = scanner.next();
         if (SubredditExistence(name) && UserExistence(user_name) && findSubreddit(name).AdminExistence(user)) {
-                findSubreddit(name).AddAdmin(FindUser(user_name));
-                FindUser(user_name).Add_user_subreddits(findSubreddit(name));
+                findSubreddit(name).AddAdmin(findUser(user_name));
+                findUser(user_name).addUserSubreddits(findSubreddit(name));
         } else {
             System.out.println("Add admin not successful .");
         }
@@ -150,13 +174,15 @@ public class Reddit {
         System.out.print("name: ");
         String name = scanner.next();
         System.out.print("info : ");
+        scanner.nextLine();
         String info = scanner.nextLine();
         if (SubredditExistence(name)) {
             System.out.println("subreddit with this name is already exist .");
         } else {
             Subreddit subreddit = new Subreddit(name, creator , info ,uuid);
-            creator.Add_user_subreddits(subreddit);
+            creator.addUserSubreddits(subreddit);
             subreddits.add(subreddit);
+            System.out.println("subreddit creat successfully");
         }
     }
 
@@ -166,7 +192,7 @@ public class Reddit {
         String name = scanner.next();
         if (SubredditExistence(name)) {
             findSubreddit(name).AddUser(user);
-            user.Add_user_subreddits(findSubreddit(name));
+            user.addUserSubreddits(findSubreddit(name));
             subreddits.add(findSubreddit(name));
         } else {
             System.out.println("subreddit doesn't exist .");
@@ -180,23 +206,30 @@ public class Reddit {
         switch (scanner.nextInt()) {
             case 1:
                 System.out.print("New username :");
-                user.setUser_name(scanner.next());
+                user.setUserName(scanner.next());
+                System.out.println("your user name change successfully");
                 break;
             case 2:
                 System.out.print("New password :");
                 user.setPassword(scanner.next().hashCode());
+                System.out.println("your password change successfully");
                 break;
             case 3:
                 System.out.print("New email :");
                 user.setEmail(scanner.next());
+                System.out.println("your email change successfully");
                 break;
             case 4:
                 System.out.print("New name :");
                 user.setName(scanner.next());
+                System.out.println("your name change successfully");
+
                 break;
             case 5:
                 System.out.println("New bio :");
+                scanner.nextLine();
                 user.setBio(scanner.nextLine());
+                System.out.println("your bio change successfully");
                 break;
         }
     }
@@ -209,7 +242,7 @@ public class Reddit {
             uuids.add(uuid);
             Comment comment = new Comment(findPost(Title) , user , text , uuid) ;
             findPost(Title).AddComment(comment);
-            user.Add_Comments(comment);
+            user.addComments(comment);
         } else {
             System.out.println("post doesn't exist");
         }
@@ -222,18 +255,19 @@ public class Reddit {
         String name = scanner.next();
         if (SubredditExistence(name))
         {
-            if (findSubreddit(name).UserExistence(creator))
+            if (findSubreddit(name).UserExistence(creator) || findSubreddit(name).AdminExistence(creator))
             {
                 UUID uuid = UUID.randomUUID() ;
                 uuids.add(uuid);
                 System.out.print("title : ");
                 String title = scanner.next();
                 System.out.print("description : ");
+                scanner.nextLine();
                 String description = scanner.nextLine();
                 Post post = new Post(title ,description ,creator , findSubreddit(name) , uuid) ;
                 posts.add(post) ;
-                creator.Add_user_subreddits(findSubreddit(name));
-                creator.Join_Subreddit(findSubreddit(name));
+                creator.addUserPost(post);
+                creator.joinSubreddit(findSubreddit(name));
                 findSubreddit(name).AddPost(post);
             } else {
                 System.out.println("you are not joined to this subreddit .");
@@ -243,13 +277,27 @@ public class Reddit {
         }
     }
 
-    public ArrayList<String> searchbyName(String query)
+    public void searchbyName(String query)
     {
+        Scanner scanner = new Scanner(System.in);
         ArrayList<String> result = new ArrayList<>() ;
         result.addAll(searchsubredditsbyname(query)) ;
         result.addAll(searchUsersbyName(query)) ;
         result.addAll(searchPostsbyName(query)) ;
-        return (result) ;
+       for (int i = 0 ; i < result.size() ; i++)
+       {
+           System.out.println(i+1 + "- " + result.get(i));
+       }
+        System.out.print("Select : ");
+        int index = scanner.nextInt() - 1;
+        String target = result.get(index);
+        if ( target.charAt(0) == 'U'){
+            findUser(target.substring(2)).showProfile();
+        } else if (target.charAt(0) == 'S'){
+            findSubreddit(target.substring(2)).Show();
+        } else if (target.charAt(0) == 'P'){
+            findPost(target.substring(2)).Show();
+        }
     }
 
 
@@ -276,8 +324,8 @@ public class Reddit {
     public List<String> searchUsersbyName(String query) {
         List<String> results = new ArrayList<>();
         for (User user : users) {
-            if (user.getUser_name().toLowerCase().contains(query.toLowerCase())) {
-                results.add(user.getUser_name());
+            if (user.getUserName().toLowerCase().contains(query.toLowerCase())) {
+                results.add("U/" + user.getUserName());
             }
         }
         return results;
@@ -285,12 +333,12 @@ public class Reddit {
 
     public void SearchbyUUID (String query)
     {
-        if (!searchSubredditsbyUUID(query).equals(null)){
-            searchSubredditsbyUUID(query).forShowSubreddit();
-        } else if (!searchPostsbyUUID(query).equals(null)){
+        if (searchSubredditsbyUUID(query) != null){
+            searchSubredditsbyUUID(query).Show();
+        } else if (searchPostsbyUUID(query) != null){
             searchPostsbyUUID(query).Show();
-        } else if (!searchUsersbyNameUUID(query).equals(null)){
-            searchUsersbyNameUUID(query).Show_Profile();
+        } else if (searchUsersbyNameUUID(query) != null){
+            searchUsersbyNameUUID(query).showProfile();
         }
     }
 

@@ -5,12 +5,12 @@ public class Post {
     private String title ;
     private String description ;
     private User creator ;
-    private ArrayList<String> tags ;
+    private ArrayList<String> tags = new ArrayList<>();
     private UUID uuid ;
     private int likes ;
     private int dislikes ;
     private Subreddit subreddit ;
-    private ArrayList<Comment> comments ;
+    private ArrayList<Comment> comments = new ArrayList<>();
 
 
 
