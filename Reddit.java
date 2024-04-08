@@ -186,17 +186,11 @@ public class Reddit {
         }
     }
 
-    public void joinSubreddit(User user) {
+    public void joinSubreddit(User user , Subreddit subreddit) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("subreddit you want to join: ");
-        String name = scanner.next();
-        if (SubredditExistence(name)) {
-            findSubreddit(name).AddUser(user);
-            user.addUserSubreddits(findSubreddit(name));
-            subreddits.add(findSubreddit(name));
-        } else {
-            System.out.println("subreddit doesn't exist .");
-        }
+            subreddit.AddUser(user);
+            user.addUserSubreddits(subreddit);
+            subreddits.add(subreddit);
     }
 
     public void changePersonalInfo(User user) {
@@ -248,7 +242,7 @@ public class Reddit {
         }
     }
 
-    public void creatPost(User creator)
+    public void creatPost(User creator , Subreddit subreddit)
     {
         Scanner scanner = new Scanner(System.in);
         System.out.print("subreddit : ");
