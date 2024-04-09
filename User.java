@@ -19,13 +19,6 @@ public class User {
 
     private Post[] timeline ;
 
-    public Post[] getTimeline() {
-        return timeline;
-    }
-
-    public void setTimeline(Post[] timeline) {
-        this.timeline = timeline;
-    }
     public User(String name, String user_name, String password, String email , UUID uuid) {
         this.name = name;
         this.user_name = user_name;
@@ -33,6 +26,13 @@ public class User {
         this.email = email;
         this.uuid = uuid ;
         timeline = new Post[10] ;
+    }
+    public Post[] getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Post[] timeline) {
+        this.timeline = timeline;
     }
     public ArrayList<Post> getCreatedPosts() {
         return created_posts;
@@ -48,12 +48,12 @@ public class User {
         int i = 1 ;
         if (!user_subreddits.isEmpty()) {
             for (Subreddit subreddit : user_subreddits) {
-                System.out.print("   " + i );
+                System.out.print("    " + i );
                 System.out.println(subreddit.getName());
                 i++;
             }
         } else {
-            System.out.println("nothing yet");
+            System.out.println("    nothing yet");
         }
     }
 
@@ -62,7 +62,7 @@ public class User {
         int i = 1;
         if (!joined_subreddits.isEmpty()) {
             for (Subreddit subreddit : joined_subreddits) {
-                System.out.print("   " + i);
+                System.out.print("    " + i + "- ");
                 System.out.println(subreddit.getName());
                 i++ ;
             }
@@ -76,7 +76,7 @@ public class User {
         int i = 1 ;
         if (!friends.isEmpty()) {
             for (User user : friends) {
-                System.out.print("   " + i);
+                System.out.print("    " + i + "- ");
                 System.out.println(user.getUserName());
                 i++;
             }
@@ -90,7 +90,7 @@ public class User {
         int i = 1 ;
         if (!up_voted_post.isEmpty()) {
             for (Post post : up_voted_post) {
-                System.out.print("   " + i);
+                System.out.print("    " + i + "- ");
                 System.out.println(post.getTitle());
                 i++ ;
             }
@@ -103,7 +103,7 @@ public class User {
         int i = 1 ;
         if (down_voted_post.isEmpty()) {
             for (Post post : down_voted_post) {
-                System.out.print("   " + i);
+                System.out.print("   " + i + "- ");
                 System.out.println(post.getTitle());
                 i++;
             }
@@ -148,6 +148,10 @@ public class User {
 
     public void setFriends(ArrayList<User> friends) {
         this.friends = friends;
+    }
+
+    public void Follow (User user){
+        friends.add(user);
     }
 
     public UUID getUuid() {
@@ -211,11 +215,21 @@ public class User {
         comments.add(comment);
     }
 
-    public void Show_Timeline () // i should choose something for post that uniq
+    public void showTimeline () // I should choose something for post that uniq
     {
-        for (Post post : timeline )
-        {
-            System.out.println(post.getTitle() + "   likes : " + post.getLikes() + "   dislikes : " + post.getDislikes());
+        boolean flag = false ;
+        if (timeline != null) {
+            for (Post post : timeline) {
+                if (post != null) {
+                    post.Show();
+                    flag = true ;
+                } else {
+                    // Handle the case when post is null, for example:
+                    if (!flag)
+                        System.out.println("nothing yet");
+                    return;
+                }
+            }
         }
     }
 
@@ -226,16 +240,22 @@ public class User {
         System.out.println("user_name : " + user_name);
         System.out.println("email : " + email);
         System.out.println("bio : " + bio);
-        System.out.println("admin subreddit : ");
+        System.out.println("---admin subreddit--- ");
         showAdminSubreddit();
-        System.out.println("joined subreddit : ");
+        System.out.println("---joined subreddit--- ");
         showJoinedSubreddits();
-        System.out.println("comments : ");
+        System.out.println("---POSTS--- ");
+        showCreatPosts();
+        System.out.println("---comments--- ");
         showComments();
-        System.out.println("1- admin subreddit");
-        System.out.println("2- joined subreddit");
-        System.out.println("3- comments");
-        String options = scanner.next();
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
     }
 
     public void showComments ()
@@ -243,12 +263,14 @@ public class User {
         int i = 1 ;
         if (!comments.isEmpty()) {
             for (Comment comment : comments) {
-                System.out.println("subreddit : " + comment.getPost().getSubreddit().getName());
+                System.out.println("for Post : " + comment.getPost().getTitle());
+                System.out.print("Comment " + i + " ");
                 System.out.printf("%-40s", comment.getText()); // This will output "42        "
                 System.out.printf("%-5s", comment.getLikes());
                 System.out.println(" likes   ");
                 System.out.printf("%-5s", comment.getDislikes());
                 System.out.println(" dislikes");
+                i++ ;
             }
         } else {
             System.out.println("    nothing yet");
@@ -258,5 +280,13 @@ public class User {
     public void addUserPost (Post post)
     {
         created_posts.add(post) ;
+    }
+
+    public void showCreatPosts (){
+        for (Post post : created_posts)
+        {
+            post.Show();
+            System.out.println("---");
+        }
     }
 }

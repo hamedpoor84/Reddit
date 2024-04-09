@@ -27,7 +27,7 @@ public class Subreddit {
         if (!posts.isEmpty()) {
             for (Post post : posts) {
                 System.out.print("   " + i + "- " );
-                System.out.println(post.getTitle() + "  " + post.getLikes() + " likes" + post.getDislikes() + " dislike Code : " + post.getUuid());
+                post.Show();
                 i++ ;
             }
         } else {

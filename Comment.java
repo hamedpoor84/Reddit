@@ -9,6 +9,8 @@ public class Comment {
     private UUID uuid ;
     private String text;
     private ArrayList<Comment> comments = new ArrayList<>();
+    private ArrayList<User> voters = new ArrayList<>();
+    private ArrayList<Integer> votes = new ArrayList<>();
 
     public Comment(Post post , User creator, String text , UUID uuid) {
         this.post = post;
@@ -17,6 +19,82 @@ public class Comment {
         this.uuid = uuid ;
         likes = 0;
         dislikes = 0;
+    }
+
+    public void show ()
+    {
+        System.out.println("---");
+        System.out.println("subreddit : " + post.getCreator().getUserName());
+        System.out.printf("%-40s", text); // This will output "42        "
+        System.out.printf("%-5s", likes);
+        System.out.println(" likes   ");
+        System.out.printf("%-5s", dislikes);
+        System.out.println(" dislikes");
+        System.out.printf("%-5s" , comments.size());
+        System.out.println(" Reply");
+    }
+
+    public void showComments ()
+    {
+        int i = 1 ;
+        for (Comment comment : comments)
+        {
+            System.out.print(i+1 + "- ");
+            comment.show();
+        }
+    }
+
+    public void upVote (User user){
+        for (User user1 : voters)
+        {
+            if (user.equals(user1)){
+                if (votes.get(voters.indexOf(user1)) == 1){
+                    votes.set(voters.indexOf(user1) , 0) ;
+                    likes -= 1 ;
+                    return;
+                } else if (votes.get(voters.indexOf(user1)) == 0) {
+                    votes.set(voters.indexOf(user1) , 1) ;
+                    likes += 1 ;
+                    return;
+                } else if (votes.get(voters.indexOf(user1)) == -1) {
+                    votes.set(voters.indexOf(user1) , 1) ;
+                    dislikes -= 1 ;
+                    likes += 1 ;
+                    return;
+                }
+            }
+        }
+        voters.add(user);
+        votes.add(1);
+    }
+
+    public void downVote(User user)
+    {
+        for (User user1 : voters)
+        {
+            if (user.equals(user1)){
+                if (votes.get(voters.indexOf(user1)) == 1){
+                    votes.set(voters.indexOf(user1) , -1) ;
+                    likes -= 1 ;
+                    dislikes += 1 ;
+                    return;
+                } else if (votes.get(voters.indexOf(user1)) == 0) {
+                    votes.set(voters.indexOf(user1) , -1) ;
+                    dislikes += 1 ;
+                    return;
+                } else if (votes.get(voters.indexOf(user1)) == -1) {
+                    votes.set(voters.indexOf(user1) , 0) ;
+                    dislikes -= 1 ;
+                    return;
+                }
+            }
+        }
+        voters.add(user);
+        votes.add(-1);
+    }
+    public void AddComment (Comment comment)
+    {
+        comments.add(comment) ;
     }
 
     public int getLikes() {
@@ -66,17 +144,5 @@ public class Comment {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public void show ()
-    {
-        System.out.println("subreddit : " + post.getCreator().getUserName());
-        System.out.printf("%-40s", text); // This will output "42        "
-        System.out.printf("%-5s", likes);
-        System.out.println(" likes   ");
-        System.out.printf("%-5s", dislikes);
-        System.out.println(" dislikes");
-        System.out.printf("%-5s" , comments.size());
-        System.out.println(" Reply");
     }
 }
