@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class User {
+    public long startTime = System.currentTimeMillis();
     private String name ;
     private String user_name ; // all username should be different .
     private int password ;
@@ -16,7 +17,6 @@ public class User {
     private UUID uuid ;
     ArrayList<Post> created_posts = new ArrayList<>();
     private String bio ;
-
     private Post[] timeline ;
 
     public User(String name, String user_name, String password, String email , UUID uuid) {

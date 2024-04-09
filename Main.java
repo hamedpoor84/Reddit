@@ -1,14 +1,17 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Main{
     public static Reddit reddit = new Reddit();
     public static void main(String[] args) {
+        reddit.fakeRed();
         while (true) {
-            reddit.fakeRed();
             User user = LogInSignUp();
-            if (user.equals(null)) {
-                System.out.println("thanks for your time ");
+            if (user.getUserName().equals("Exit")) {
+                System.out.println("thanks for your time :+");
                 return;
             } else {
                 System.out.println("your sign up successful");
@@ -17,7 +20,7 @@ public class Main{
         }
     }
     public static User LogInSignUp () {
-        User user = null;
+        User user = new User("Exit" , "Exit" , "exitExit" , "E@E.E" , UUID.randomUUID() ) ;
         boolean access = false;
         while (true) {
             Scanner scanner = new Scanner(System.in);
@@ -39,7 +42,7 @@ public class Main{
                     }
                 }
                 case "3" -> {
-                    return null ;
+                    return user ;
                 }default -> System.out.println("choose an option please");
             }
         }
@@ -116,15 +119,18 @@ public class Main{
         while (true) {
             Scanner scanner = new Scanner(System.in);
             post.Show();
-            System.out.println("1- Add Comment");
-            System.out.println("2- Up vote");
-            System.out.println("3- Down vote");
-            System.out.println("4- creator");
-            System.out.println("5- subreddit");
-            System.out.println("6- select comment ");
-            System.out.println("7- previous page");
-            System.out.println("8- Explore");
-            System.out.println("9- Menu");
+            System.out.println("1- Add Comment\n2- Up vote\n3- Down vote\n4- creator\n5- subreddit\n6- select comment\n7- previous page\n8- Explore\n9- Menu");
+            if (post.getSubreddit().AdminExistence(user))
+            {
+                System.out.println("options for Admin : ");
+                System.out.println("11- Delete");
+            }
+            if (user.equals(post.getCreator()))
+            {
+                System.out.println("options for creator : ");
+                System.out.println("10- Edit");
+                System.out.println("11- Delete");
+            }
             String option = scanner.next();
             switch (option) {
                 case "1" -> reddit.commentForPost(user, post);
@@ -132,12 +138,18 @@ public class Main{
                 case "3" -> post.downVote(user);
                 case "4" -> User(user, post.getCreator());
                 case "5" -> Subreddit(user, post.getSubreddit());
-                case "6" -> Comment(user, selectComment(user, post.getComments()));
+                case "6" -> Comment(user, Objects.requireNonNull(selectComment(user, post.getComments())));
                 case "7" -> {
                     return;
                 }
                 case "8" -> timeLine(user);
                 case "9" -> RunReddit(user);
+                case "10" -> {
+                    post.Edit();
+                }
+                case "11" -> {
+                    reddit.deletePost(post);
+                }
                 default -> System.out.println("choose an option please");
             }
         }
@@ -147,30 +159,71 @@ public class Main{
     {
         newPage();
         while (true) {
-            Scanner scanner = new Scanner(System.in);
-            subreddit.Show();
-            System.out.println("options :");
-            System.out.println("1- Join");
-            System.out.println("2- Creat Post");
-            System.out.println("3- Select Post ");
-            System.out.println("4- previous page");
-            System.out.println("5- Explore");
-            System.out.println("6- Menu");
-            String option = scanner.next();
-            switch (option) {
-                case "1" -> reddit.joinSubreddit(user, subreddit);
-                case "2" -> reddit.creatPost(user, subreddit);
-                case "3" -> {
-                    Post(user, selectPost(user, subreddit.getPosts()));
-                }
-                case "4" -> {
-                    return;
-                }
-                case "5" -> {
-                    timeLine(user);
-                }
-                case "6" -> RunReddit(user);
-                default -> System.out.println("choose an option please");
+//            if (!subreddit.AdminExistence(user)) {
+                Scanner scanner = new Scanner(System.in);
+                subreddit.Show();
+                System.out.println("options :");
+                System.out.println("1- Join");
+                System.out.println("2- Creat Post");
+                System.out.println("3- Select Post ");
+                System.out.println("4- previous page");
+                System.out.println("5- Explore");
+                System.out.println("6- Menu");
+                String option = scanner.next();
+                switch (option) {
+                    case "1" -> reddit.joinSubreddit(user, subreddit);
+                    case "2" -> reddit.creatPost(user, subreddit);
+                    case "3" -> {
+                        Post(user, selectPost(user, subreddit.getPosts()));
+                    }
+                    case "4" -> {
+                        return;
+                    }
+                    case "5" -> {
+                        timeLine(user);
+                    }
+                    case "6" -> RunReddit(user);
+                    default -> System.out.println("choose an option please");
+//                }
+//            } else {
+//                Scanner scanner = new Scanner(System.in);
+//                subreddit.Show();
+//                System.out.println("options :");
+//                System.out.println("1- Creat Post");
+//                System.out.println("2- Select Post ");
+//                System.out.println("3- Users");
+//                System.out.println("4- Admins");
+//                System.out.println("5- delete User");
+//                System.out.println("6- delete Admin");
+//                //System.out.println("5- delete comment");
+//                System.out.println("7- previous page");
+//                System.out.println("8- Explore");
+//                System.out.println("9- Menu");
+//                String option = scanner.next();
+//                switch (option) {
+//                    case "1" -> reddit.joinSubreddit(user, subreddit);
+//                    case "2" -> reddit.creatPost(user, subreddit);
+//                    case "3" -> {
+//                        Post(user, selectPost(user, subreddit.getPosts()));
+//                    }
+//                    case "4" -> {
+//                    }
+//                    case "5" -> {
+//
+//                    }
+//                    case "6" -> {
+//
+//
+//                    }
+//                    case "7" -> {
+//                        return;
+//                    }
+//                    case "8" -> {
+//                        timeLine(user);
+//                    }
+//                    case "9" -> RunReddit(user);
+//                    default -> System.out.println("choose an option please");
+//                }
             }
         }
     }

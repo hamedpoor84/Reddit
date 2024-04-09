@@ -24,7 +24,7 @@ public class Comment {
     public void show ()
     {
         System.out.println("---");
-        System.out.println("subreddit : " + post.getCreator().getUserName());
+        System.out.println("creator : " + creator.getUserName());
         System.out.printf("%-40s", text); // This will output "42        "
         System.out.printf("%-5s", likes);
         System.out.println(" likes   ");

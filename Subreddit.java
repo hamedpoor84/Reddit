@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 public class Subreddit {
+    public LocalDateTime dateTime = LocalDateTime.now();
     private String name ;
     private User creator ;
     private ArrayList<User> users = new ArrayList<>();
@@ -177,6 +179,7 @@ public class Subreddit {
                 }
                 else {update_timeline[i] = post ;}
             }
+            user.setTimeline(update_timeline);
         }
     }
 
@@ -196,6 +199,7 @@ public class Subreddit {
     public void Show (){
         System.out.print("name : ");
         System.out.printf("%-10s" , name);
+        System.out.print("created in : " + dateTime);
         System.out.println(member_number + " member   " + "Code : " + uuid);
         System.out.println("Info : " + info);
         System.out.println("Posts : ");

@@ -1,23 +1,21 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class Post {
+
     private String title ;
     private String description ;
     private User creator ;
     private ArrayList<String> tags = new ArrayList<>();
-
     private ArrayList<Comment> comments = new ArrayList<>();
-
     private ArrayList<User> voters = new ArrayList<>();
     private ArrayList<Integer> votes = new ArrayList<>();
     private UUID uuid ;
-
     private int likes ;
-
     private int dislikes ;
     private Subreddit subreddit ;
-
+    private Scanner scanner = new Scanner(System.in);
     public Post(String title, String description, User creator, Subreddit subreddit , UUID uuid) {
         this.title = title;
         this.description = description;
@@ -30,8 +28,7 @@ public class Post {
     {
         for (Comment comment : comments)
         {
-            System.out.print("  ");
-            System.out.println(comment.getText() +"   "+ comment.getLikes() + "likes   " + comment.getDislikes());
+            comment.show();
         }
     }
 
@@ -166,6 +163,21 @@ public class Post {
         voters.add(user);
         votes.add(-1);
         dislikes += 1 ;
+    }
+
+    public void Edit ()
+    {
+        System.out.println("option : ");
+        System.out.println("1- Title\n2- Body\n");
+        String option = scanner.next();
+        if (option.equals("1"))
+        {
+            System.out.println("Title : " + title + "\n new Title : ");
+            scanner.next();
+        } else if (option.equals("2")) {
+            System.out.println("body : " + description + "\n new body : ");
+            description = scanner.nextLine();
+        }
     }
 
     public void setComments(ArrayList<Comment> comments) {

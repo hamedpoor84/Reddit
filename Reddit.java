@@ -303,6 +303,7 @@ public class Reddit {
     public void commentForPost ( User user , Post post)
     {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Text : ");
         scanner.nextLine();
         String text = scanner.nextLine();
         UUID uuid = UUID.randomUUID() ;
@@ -420,4 +421,41 @@ public class Reddit {
         return null;
     }
 
+
+    public void deletePost (Post post)
+    {
+        ArrayList<Post> ubdatePost = post.getSubreddit().getPosts();
+        ubdatePost.remove(post) ;
+        post.getSubreddit().setPosts(ubdatePost);
+        posts.remove(post);
+        ArrayList<Post> ubdatePost1 = post.getCreator().created_posts;
+        ubdatePost1.remove(post) ;
+        post.getSubreddit().setPosts(ubdatePost1);
+        posts.remove(post);ArrayList<Post> ubdatePost2 = post.getCreator().getDown_voted_post();
+        ubdatePost2.remove(post) ;
+        post.getSubreddit().setPosts(ubdatePost2);
+        posts.remove(post);ArrayList<Post> ubdatePost3 = post.getCreator().getUp_voted_post();
+        ubdatePost3.remove(post) ;
+        post.getSubreddit().setPosts(ubdatePost3);
+        posts.remove(post);
+        post = null ;
+    }
+
+
+    public void deleteSubreddit (Subreddit subreddit )
+    {
+        for (User user : subreddit.getUsers())
+        {
+            ArrayList<Subreddit> update = user.getJoined_subreddits();
+            update.remove(subreddit);
+            user.setJoined_subreddits(update);
+        }
+        for (User user : subreddit.getUsers())
+        {
+            ArrayList<Subreddit> update = user.getUser_subreddits();
+            update.remove(subreddit);
+            user.setUserSubreddits(update);
+        }
+        subreddit = null ;
+    }
 }
