@@ -1,15 +1,16 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
-
 public class User {
-    public long startTime = System.currentTimeMillis();
+    private String Condition ;
     private String name ;
     private String user_name ; // all username should be different .
     private int password ;
     private String email ;
     private ArrayList<Comment> comments = new ArrayList<>();
-    private ArrayList<User> friends = new ArrayList<>();
+    private ArrayList<User> followings = new ArrayList<>();
+    private ArrayList<User> followers = new ArrayList<>();
     private ArrayList<Subreddit> joined_subreddits = new ArrayList<>();
     private ArrayList<Post> up_voted_post = new ArrayList<>();
     private ArrayList<Subreddit> user_subreddits = new ArrayList<>();
@@ -27,6 +28,16 @@ public class User {
         this.uuid = uuid ;
         timeline = new Post[10] ;
     }
+
+
+    public String getCondition() {
+        return Condition;
+    }
+
+    public void setCondition(String condition) {
+        Condition = condition;
+    }
+
     public Post[] getTimeline() {
         return timeline;
     }
@@ -34,6 +45,7 @@ public class User {
     public void setTimeline(Post[] timeline) {
         this.timeline = timeline;
     }
+
     public ArrayList<Post> getCreatedPosts() {
         return created_posts;
     }
@@ -41,7 +53,6 @@ public class User {
     public void setCreatedPosts(ArrayList<Post> created_posts) {
         this.created_posts = created_posts;
     }
-
 
     public void showAdminSubreddit()
     {
@@ -71,11 +82,11 @@ public class User {
         }
     }
 
-    public void showFriends()
+    public void showFollowings()
     {
         int i = 1 ;
-        if (!friends.isEmpty()) {
-            for (User user : friends) {
+        if (!followings.isEmpty()) {
+            for (User user : followings) {
                 System.out.print("    " + i + "- ");
                 System.out.println(user.getUserName());
                 i++;
@@ -84,6 +95,21 @@ public class User {
             System.out.println("    nothing yet");
         }
     }
+
+    public void showFollowers()
+    {
+        int i = 1 ;
+        if (!followers.isEmpty()) {
+            for (User user : followers) {
+                System.out.print("    " + i + "- ");
+                System.out.println(user.getUserName());
+                i++;
+            }
+        } else {
+            System.out.println("    nothing yet");
+        }
+    }
+
 
     public void showUpVotedPost()
     {
@@ -142,18 +168,36 @@ public class User {
         this.password = password;
     }
 
-    public ArrayList<User> getFriends() {
-        return friends;
+    public ArrayList<User> getFollowings() {
+        return followings;
     }
 
-    public void setFriends(ArrayList<User> friends) {
-        this.friends = friends;
+    public ArrayList<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(ArrayList<User> followers) {
+        this.followers = followers;
+    }
+
+    public void setFollowings(ArrayList<User> followings) {
+        this.followings = followings;
     }
 
     public void Follow (User user){
-        friends.add(user);
+        followings.add(user);
     }
+    public void Follower (User user)
+    {
+        followers.add(user);
+    }
+    public void unFollow (User user) {
+        followings.remove(user);}
 
+    public void unFollower (User user)
+    {
+        followers.remove(user);
+    }
     public UUID getUuid() {
         return uuid;
     }
@@ -186,23 +230,23 @@ public class User {
         this.joined_subreddits = joined_subreddits;
     }
 
-    public ArrayList<Post> getUp_voted_post() {
+    public ArrayList<Post> getUpVotedPosts() {
         return up_voted_post;
     }
 
-    public void setUp_voted_post(ArrayList<Post> up_voted_post) {
+    public void setUp_voted_posts(ArrayList<Post> up_voted_post) {
         this.up_voted_post = up_voted_post;
     }
 
-    public ArrayList<Post> getDown_voted_post() {
+    public ArrayList<Post> getDownVotedPosts() {
         return down_voted_post;
     }
 
-    public void setDown_voted_post(ArrayList<Post> down_voted_post) {
+    public void setDownVotedPosts(ArrayList<Post> down_voted_post) {
         this.down_voted_post = down_voted_post;
     }
 
-    public ArrayList<Subreddit> getUser_subreddits() {
+    public ArrayList<Subreddit> getUserSubreddits() {
         return user_subreddits;
     }
 
@@ -219,9 +263,9 @@ public class User {
     {
         boolean flag = false ;
         if (timeline != null) {
-            for (Post post : timeline) {
-                if (post != null) {
-                    post.Show();
+            for (int i = 0 ; i < 10 ; i++) {
+                if (timeline[i] != null) {
+                    timeline[i].showInList();
                     flag = true ;
                 } else {
                     // Handle the case when post is null, for example:
@@ -233,10 +277,10 @@ public class User {
         }
     }
 
+
     public void showProfile()
     {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Name : " + name);
+        System.out.println("Name : " + name + "  " + Condition);
         System.out.println("user_name : " + user_name);
         System.out.println("email : " + email);
         System.out.println("bio : " + bio);
@@ -285,8 +329,31 @@ public class User {
     public void showCreatPosts (){
         for (Post post : created_posts)
         {
-            post.Show();
+            post.showInList();
             System.out.println("---");
         }
+    }
+
+    public boolean followingExistence(User user)
+    {
+        for (User user1 : followings)
+        {
+            if (user.equals(user1)){
+                return true;
+            }
+        }
+        return false ;
+    }
+
+
+    public boolean followerExistence(User user)
+    {
+        for (User user1 : followers)
+        {
+            if (user.equals(user1)){
+                return true;
+            }
+        }
+        return false ;
     }
 }

@@ -304,7 +304,6 @@ public class Reddit {
     {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Text : ");
-        scanner.nextLine();
         String text = scanner.nextLine();
         UUID uuid = UUID.randomUUID() ;
         uuids.add(uuid);
@@ -324,6 +323,7 @@ public class Reddit {
         comment.AddComment(newComment);
         user.addComments(comment);
     }
+
 
     public void creatPost(User creator , Subreddit subreddit)
     {
@@ -422,24 +422,26 @@ public class Reddit {
     }
 
 
-    public void deletePost (Post post)
-    {
-        ArrayList<Post> ubdatePost = post.getSubreddit().getPosts();
-        ubdatePost.remove(post) ;
-        post.getSubreddit().setPosts(ubdatePost);
+    public void deletePost(Post post) {
+        // Remove the post from the subreddit's list of posts
+        post.getSubreddit().getPosts().remove(post);
+
+        // Remove the post from the list of all posts
         posts.remove(post);
-        ArrayList<Post> ubdatePost1 = post.getCreator().created_posts;
-        ubdatePost1.remove(post) ;
-        post.getSubreddit().setPosts(ubdatePost1);
-        posts.remove(post);ArrayList<Post> ubdatePost2 = post.getCreator().getDown_voted_post();
-        ubdatePost2.remove(post) ;
-        post.getSubreddit().setPosts(ubdatePost2);
-        posts.remove(post);ArrayList<Post> ubdatePost3 = post.getCreator().getUp_voted_post();
-        ubdatePost3.remove(post) ;
-        post.getSubreddit().setPosts(ubdatePost3);
-        posts.remove(post);
-        post = null ;
+
+        // Remove the post from the creator's created_posts list
+        post.getCreator().getCreatedPosts().remove(post);
+
+        // Remove the post from the creator's down_voted_post list
+        post.getCreator().getDownVotedPosts().remove(post);
+
+        // Remove the post from the creator's up_voted_post list
+        post.getCreator().getUpVotedPosts().remove(post);
+
+        // Set the reference to the post to null (optional)
+        post = null;
     }
+
 
 
     public void deleteSubreddit (Subreddit subreddit )
@@ -452,7 +454,7 @@ public class Reddit {
         }
         for (User user : subreddit.getUsers())
         {
-            ArrayList<Subreddit> update = user.getUser_subreddits();
+            ArrayList<Subreddit> update = user.getUserSubreddits();
             update.remove(subreddit);
             user.setUserSubreddits(update);
         }

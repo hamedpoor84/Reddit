@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Main{
@@ -50,17 +49,18 @@ public class Main{
 
     public static void RunReddit (User user){
         while (true) {
+            user.setCondition("Online");
+            user.startTime = System.currentTimeMillis();
             Scanner scanner = new Scanner(System.in);
             System.out.println("1- Profile");
             System.out.println("2- Creat Subreddit");
             System.out.println("3- Search");
-            System.out.println("5- Change personal info");
-            System.out.println("6- my Page"); // I have this option in subreddit . should I have this here ?
-            System.out.println("7- Search By UUID");
-            System.out.println("8- View Subreddits");
-            System.out.println("9- My Subreddits ");
-            System.out.println("10- Exit");
-            System.out.println("11- Add admin");
+            System.out.println("4- Change personal info");
+            System.out.println("5- my Page"); // I have this option in subreddit . should I have this here ?
+            System.out.println("6- View Subreddits");
+            System.out.println("7- My Subreddits ");
+            System.out.println("8- Add admin"); // TODO
+            System.out.println("9- Exit");
             String option = scanner.next();
             switch (option) {
                 case "1" -> User(user , user ) ;
@@ -82,14 +82,9 @@ public class Main{
                         Post(user , selectPost(user , reddit.searchPostsbyName(target)));
                     }
                 }
-                case "5" -> reddit.changePersonalInfo(user);
-                case "6" -> timeLine(user);
-                case "7" -> {
-                    System.out.print("target : ");
-                    String target = scanner.next();
-                    reddit.SearchbyUUID(target);
-                }
-                case "8" -> {
+                case "4" -> reddit.changePersonalInfo(user);
+                case "5" -> timeLine(user);
+                case "6" -> {
                     reddit.viewSubreddits();
                     System.out.println("1- Select Subreddit");
                     System.out.println("2- Menu");
@@ -100,13 +95,14 @@ public class Main{
                         RunReddit(user);
                     }
                 }
-                case "9" -> {
+                case "7" -> {
                     Subreddit(user , selectSubreddit(user , user.getJoined_subreddits()));
                 }
-                case "11" -> {
+                case "8" -> {
                     reddit.addAdmin(user);
                 }
-                case "10" -> {
+                case "9" -> {
+                    user.startTime = System.currentTimeMillis();
                     return;
                 } default -> System.out.println("choose an option please");
             }
@@ -262,29 +258,80 @@ public class Main{
     public static void User(User main_user, User user){
         newPage();
         while (true) {
+            if (!main_user.equals(user))
+            {
+                long EndTime = System.currentTimeMillis();
+                long Time = EndTime - user.startTime;
+                user.setCondition(Time + " ago ");
+            }
             Scanner scanner = new Scanner(System.in);
             user.showProfile();
             System.out.println("options :");
-            System.out.println("1- Follow");
+            if (main_user.equals(user))
+            {
+
+            }
+            else if (main_user.followingExistence(user)) {
+                System.out.println("1- UnFollow");
+            } else {
+                System.out.println("1- Follow");
+            }
             System.out.println("2- Select Post ");
             System.out.println("3- Select Comment");
             System.out.println("4- Select subreddit from UserSubreddit");
             System.out.println("5- Select Subreddit from joinSubreddit");
-            System.out.println("6- previous page");
-            System.out.println("7- Explore");
-            System.out.println("8- Menu");
+            System.out.println("6- Followers");
+            System.out.println("7- Followings");
+            System.out.println("8- previous page");
+            System.out.println("9- Explore");
+            System.out.println("10- Menu");
             String option = scanner.next();
             switch (option) {
-                case "1" -> main_user.Follow(user);
+                case "1" -> {
+
+                    if (main_user.equals(user))
+                    {
+                        System.out.println("you don't have this option .");
+                    }
+                    else if (main_user.followingExistence(user)) {
+                        main_user.unFollow(user);
+                        user.unFollower(main_user);
+                    } else {
+                        main_user.Follow(user);
+                        user.Follower(main_user);
+                    }
+                }
                 case "2" -> Post(main_user, selectPost(user, user.created_posts));
                 case "3" -> Comment(main_user, selectComment(main_user, user.getComments()));
-                case "4" -> Subreddit(main_user, selectSubreddit(main_user, user.getUser_subreddits()));
+                case "4" -> Subreddit(main_user, selectSubreddit(main_user, user.getUserSubreddits()));
                 case "5" -> Subreddit(main_user, selectSubreddit(main_user, user.getJoined_subreddits()));
-                case "6" -> {
+                case "6" ->{
+                    user.showFollowers();
+                    System.out.println("1- Select\n2- Back");
+                    String option1 = scanner.next();
+                    if (option1.equals("1"))
+                    {
+                        User( main_user ,selectUser(main_user , user.getFollowers()));
+                    } else if (option1.equals("2")) {
+
+                    }
+                }
+                case "7" ->{
+                    user.showFollowings();
+                    System.out.println("1- Select\n2- Back");
+                    String option1 = scanner.next();
+                    if (option1.equals("1"))
+                    {
+                        User( main_user ,selectUser(main_user , user.getFollowings()));
+                    } else if (option1.equals("2")) {
+
+                    }
+                }
+                case "8" -> {
                     return;
                 }
-                case "7" -> timeLine(main_user);
-                case "8" -> RunReddit(main_user);
+                case "9" -> timeLine(main_user);
+                case "10" -> RunReddit(main_user);
                 default -> System.out.println("choose an option please");
             }
         }
@@ -321,7 +368,7 @@ public class Main{
         for (User user1 : users)
         {
             System.out.print(i+1 + "- ");
-            System.out.println(user.getUserName());
+            System.out.println(user1.getUserName());
             i++;
             System.out.println("--------");
         }
@@ -344,7 +391,7 @@ public class Main{
         for (Post post : posts)
         {
             System.out.print(i+1 + "- ");
-            post.Show();
+            post.showInList();
             i++;
             System.out.println("--------");
         }

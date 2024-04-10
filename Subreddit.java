@@ -29,7 +29,7 @@ public class Subreddit {
         if (!posts.isEmpty()) {
             for (Post post : posts) {
                 System.out.print("   " + i + "- " );
-                post.Show();
+                post.showInList();
                 i++ ;
             }
         } else {
@@ -199,8 +199,8 @@ public class Subreddit {
     public void Show (){
         System.out.print("name : ");
         System.out.printf("%-10s" , name);
-        System.out.print("created in : " + dateTime);
-        System.out.println(member_number + " member   " + "Code : " + uuid);
+        System.out.println("created in : " + dateTime);
+        System.out.println(member_number + " member   " );
         System.out.println("Info : " + info);
         System.out.println("Posts : ");
         ShowPosts();

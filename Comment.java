@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Comment {
+    public long startTime = System.currentTimeMillis();
+    private long showTime ;
     private Post post;
     private int likes;
     private int dislikes;
@@ -19,17 +21,20 @@ public class Comment {
         this.uuid = uuid ;
         likes = 0;
         dislikes = 0;
+        post.setCommentCounter(post.getCommentCounter()+1);
     }
 
     public void show ()
     {
-        System.out.println("---");
-        System.out.println("creator : " + creator.getUserName());
-        System.out.printf("%-40s", text); // This will output "42        "
+        showTime = System.currentTimeMillis() - startTime ;
+        System.out.print("*");
+        System.out.println("By : " + creator.getUserName() + "Made in : " + showTime);
+        System.out.printf("%-40s", text); // This will output "42//     "
+        System.out.println();
         System.out.printf("%-5s", likes);
-        System.out.println(" likes   ");
+        System.out.print(" likes   ");
         System.out.printf("%-5s", dislikes);
-        System.out.println(" dislikes");
+        System.out.print(" dislikes   ");
         System.out.printf("%-5s" , comments.size());
         System.out.println(" Reply");
     }

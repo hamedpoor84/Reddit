@@ -1,9 +1,11 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class Post {
-
+    public long startTime = System.currentTimeMillis();
+    private long showTime ;
     private String title ;
     private String description ;
     private User creator ;
@@ -14,6 +16,16 @@ public class Post {
     private UUID uuid ;
     private int likes ;
     private int dislikes ;
+
+    public int getCommentCounter() {
+        return commentCounter;
+    }
+
+    public void setCommentCounter(int commentCounter) {
+        this.commentCounter = commentCounter;
+    }
+
+    private int commentCounter = 0 ;
     private Subreddit subreddit ;
     private Scanner scanner = new Scanner(System.in);
     public Post(String title, String description, User creator, Subreddit subreddit , UUID uuid) {
@@ -108,10 +120,18 @@ public class Post {
 
     public void Show ()
     {
-        System.out.println("Title : -" + title + "-");
+        showTime = System.currentTimeMillis() - startTime ;
+        System.out.println("Title : -" + title + "-   Made in : " + showTime );
         System.out.println("text : " + description);
-        System.out.println(likes + " likes   " + dislikes + " dislikes Code : " + uuid );
+        System.out.println(likes + " likes   " + dislikes + " dislikes   " + commentCounter +" Comments\n ---Coments---" );
         ShowComments();
+    }
+
+    public void showInList (){
+        showTime = System.currentTimeMillis() - startTime ;
+        System.out.println("Title : -" + title + "-   create in : " + showTime );
+        System.out.println("text : " + description);
+        System.out.println(likes + " likes   " + dislikes + " dislikes   " + commentCounter +" Comments\n ---Coments---" );
     }
 
     public void upVote (User user){
@@ -172,10 +192,11 @@ public class Post {
         String option = scanner.next();
         if (option.equals("1"))
         {
-            System.out.println("Title : " + title + "\n new Title : ");
-            scanner.next();
+            System.out.print("Title : " + title + "\n new Title : ");
+            title = scanner.next();
         } else if (option.equals("2")) {
             System.out.println("body : " + description + "\n new body : ");
+            scanner.nextLine();
             description = scanner.nextLine();
         }
     }
@@ -187,4 +208,5 @@ public class Post {
     public ArrayList<Comment> getComments() {
         return comments;
     }
+
 }
