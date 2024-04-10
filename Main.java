@@ -73,13 +73,20 @@ public class Main{
                     String option1 = scanner.next();
                     System.out.print("target : ");
                     String target = scanner.next();
-                    if (option1.equals("1"))
+                    if (option1.equals("1") && !reddit.searchsubredditsbyname(target).isEmpty())
                     {
                         Subreddit(user , selectSubreddit(user , reddit.searchsubredditsbyname(target)));
-                    } else if (option1.equals("2")) {
+                    } else if (option1.equals("1") && reddit.searchsubredditsbyname(target).isEmpty())
+                    {
+                        System.out.println("nothing find .");
+                    } else if (option1.equals("2") && !reddit.searchUsersbyName(target).isEmpty()) {
                         User(user , selectUser(user , reddit.searchUsersbyName(target)));
-                    } else if (option1.equals("3")) {
+                    } else if (option1.equals("2") && reddit.searchUsersbyName(target).isEmpty()) {
+                        System.out.println("nothing find .");
+                    } else if (option1.equals("3") && !reddit.searchPostsbyName(target).isEmpty()) {
                         Post(user , selectPost(user , reddit.searchPostsbyName(target)));
+                    } else if (option1.equals("3") && reddit.searchPostsbyName(target).isEmpty()) {
+                        System.out.println("nothing find .");
                     }
                 }
                 case "4" -> reddit.changePersonalInfo(user);
@@ -89,14 +96,19 @@ public class Main{
                     System.out.println("1- Select Subreddit");
                     System.out.println("2- Menu");
                     String option1 = scanner.next();
-                    if (option1.equals("1")){
+                    if (option1.equals("1") && !reddit.getSubreddits().isEmpty()){
                         Subreddit(user , selectSubreddit(user , reddit.getSubreddits()));
+                    } else if (option1.equals("1") && reddit.getSubreddits().isEmpty()) {
+                        System.out.println("nothing yet");
                     } else if (option1.equals("2")) {
                         RunReddit(user);
                     }
                 }
                 case "7" -> {
-                    Subreddit(user , selectSubreddit(user , user.getJoined_subreddits()));
+                    if (!user.getJoined_subreddits().isEmpty())
+                        Subreddit(user , selectSubreddit(user , user.getJoined_subreddits()));
+                    else
+                        System.out.println("nothing yet");
                 }
                 case "8" -> {
                     reddit.addAdmin(user);
@@ -134,7 +146,13 @@ public class Main{
                 case "3" -> post.downVote(user);
                 case "4" -> User(user, post.getCreator());
                 case "5" -> Subreddit(user, post.getSubreddit());
-                case "6" -> Comment(user, Objects.requireNonNull(selectComment(user, post.getComments())));
+                case "6" -> {
+                    if (!post.getComments().isEmpty())
+                        Comment(user, Objects.requireNonNull(selectComment(user, post.getComments())))
+                    else {
+                        System.out.println("nothing yet");
+                    }
+                }
                 case "7" -> {
                     return;
                 }
@@ -170,7 +188,11 @@ public class Main{
                     case "1" -> reddit.joinSubreddit(user, subreddit);
                     case "2" -> reddit.creatPost(user, subreddit);
                     case "3" -> {
-                        Post(user, selectPost(user, subreddit.getPosts()));
+                        if (!subreddit.getPosts().isEmpty())
+                            Post(user, selectPost(user, subreddit.getPosts()));
+                        else {
+                            System.out.println("nothing yet");
+                        }
                     }
                     case "4" -> {
                         return;
@@ -180,46 +202,13 @@ public class Main{
                     }
                     case "6" -> RunReddit(user);
                     default -> System.out.println("choose an option please");
-//                }
-//            } else {
-//                Scanner scanner = new Scanner(System.in);
-//                subreddit.Show();
-//                System.out.println("options :");
-//                System.out.println("1- Creat Post");
-//                System.out.println("2- Select Post ");
-//                System.out.println("3- Users");
-//                System.out.println("4- Admins");
-//                System.out.println("5- delete User");
-//                System.out.println("6- delete Admin");
-//                //System.out.println("5- delete comment");
-//                System.out.println("7- previous page");
-//                System.out.println("8- Explore");
-//                System.out.println("9- Menu");
-//                String option = scanner.next();
-//                switch (option) {
-//                    case "1" -> reddit.joinSubreddit(user, subreddit);
-//                    case "2" -> reddit.creatPost(user, subreddit);
-//                    case "3" -> {
-//                        Post(user, selectPost(user, subreddit.getPosts()));
-//                    }
-//                    case "4" -> {
-//                    }
-//                    case "5" -> {
-//
-//                    }
-//                    case "6" -> {
-//
-//
-//                    }
-//                    case "7" -> {
-//                        return;
-//                    }
-//                    case "8" -> {
-//                        timeLine(user);
-//                    }
-//                    case "9" -> RunReddit(user);
-//                    default -> System.out.println("choose an option please");
-//                }
+
+//                System.out.println("3- Users");////// _____MORE OPTIONS_____
+//                System.out.println("4- Admins");///////
+//                System.out.println("5- delete User");///////
+//                System.out.println("6- delete Admin");//////
+//                System.out.println("5- delete comment");////
+//                System.out.println("5- delete subreddit");
             }
         }
     }
@@ -301,17 +290,46 @@ public class Main{
                         user.Follower(main_user);
                     }
                 }
-                case "2" -> Post(main_user, selectPost(user, user.created_posts));
-                case "3" -> Comment(main_user, selectComment(main_user, user.getComments()));
-                case "4" -> Subreddit(main_user, selectSubreddit(main_user, user.getUserSubreddits()));
-                case "5" -> Subreddit(main_user, selectSubreddit(main_user, user.getJoined_subreddits()));
+                case "2" -> {
+                    if (!user.created_posts.isEmpty())
+                        Post(main_user, selectPost(user, user.created_posts));
+                    else {
+                        System.out.println("nothing yet");
+                    }
+                }
+                case "3" ->
+                {
+                    if (!user.getComments().isEmpty())
+                        Comment(main_user, Objects.requireNonNull(selectComment(main_user, user.getComments())));
+                    else {
+                        System.out.println("nothing yet");
+                    }
+                }
+                case "4" ->
+                {
+                    if (!user.getUserSubreddits().isEmpty())
+                        Subreddit(main_user, selectSubreddit(main_user, user.getUserSubreddits()));
+                    else {
+                        System.out.println("nothing yet");
+                    }
+                }
+                case "5" ->
+                {
+                    if (!user.getJoined_subreddits().isEmpty())
+                        Subreddit(main_user, selectSubreddit(main_user, user.getJoined_subreddits()));
+                    else {
+                        System.out.println("nothing yet");
+                    }
+                }
                 case "6" ->{
                     user.showFollowers();
                     System.out.println("1- Select\n2- Back");
                     String option1 = scanner.next();
-                    if (option1.equals("1"))
+                    if (option1.equals("1") && !user.getFollowers().isEmpty())
                     {
                         User( main_user ,selectUser(main_user , user.getFollowers()));
+                    } else if (option1.equals("1") && user.getFollowers().isEmpty()) {
+                        System.out.println("nothing yet");
                     } else if (option1.equals("2")) {
 
                     }
@@ -320,9 +338,11 @@ public class Main{
                     user.showFollowings();
                     System.out.println("1- Select\n2- Back");
                     String option1 = scanner.next();
-                    if (option1.equals("1"))
+                    if (option1.equals("1") && !user.getFollowings().isEmpty())
                     {
                         User( main_user ,selectUser(main_user , user.getFollowings()));
+                    } else if (option1.equals("1") && user.getFollowings().isEmpty()) {
+                        System.out.println("nothing yet");
                     } else if (option1.equals("2")) {
 
                     }
@@ -350,8 +370,8 @@ public class Main{
             if (option.equals("1")) {
                 System.out.print("index : ");
                 int index = scanner.nextInt() - 1;
-                if (user.getTimeline()[index] != null && index < 11 )
-                    Post(user, user.getTimeline()[index]);
+                if (user.getTimeline().get(index) != null && index < 11 )
+                    Post(user, user.getTimeline().get(index));
                 else {
                     System.out.println("index out of range");
                 }
@@ -454,41 +474,8 @@ public class Main{
     }
 
     public static void newPage () {
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        for (int i = 0 ; i < 50 ; i++)
+            System.out.println();
     }
 
 

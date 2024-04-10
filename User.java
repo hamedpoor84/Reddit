@@ -2,7 +2,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
+
 public class User {
+    public long startTime = System.currentTimeMillis();
     private String Condition ;
     private String name ;
     private String user_name ; // all username should be different .
@@ -18,7 +20,7 @@ public class User {
     private UUID uuid ;
     ArrayList<Post> created_posts = new ArrayList<>();
     private String bio ;
-    private Post[] timeline ;
+    private ArrayList<Post> timeline = new ArrayList<>();
 
     public User(String name, String user_name, String password, String email , UUID uuid) {
         this.name = name;
@@ -26,9 +28,11 @@ public class User {
         this.password = password.hashCode();
         this.email = email;
         this.uuid = uuid ;
-        timeline = new Post[10] ;
     }
 
+    public void setTimeline(ArrayList<Post> timeline) {
+        this.timeline = timeline;
+    }
 
     public String getCondition() {
         return Condition;
@@ -38,12 +42,8 @@ public class User {
         Condition = condition;
     }
 
-    public Post[] getTimeline() {
+    public ArrayList<Post> getTimeline() {
         return timeline;
-    }
-
-    public void setTimeline(Post[] timeline) {
-        this.timeline = timeline;
     }
 
     public ArrayList<Post> getCreatedPosts() {
@@ -261,22 +261,29 @@ public class User {
 
     public void showTimeline () // I should choose something for post that uniq
     {
-        boolean flag = false ;
-        if (timeline != null) {
-            for (int i = 0 ; i < 10 ; i++) {
-                if (timeline[i] != null) {
-                    timeline[i].showInList();
-                    flag = true ;
-                } else {
-                    // Handle the case when post is null, for example:
-                    if (!flag)
-                        System.out.println("nothing yet");
-                    return;
-                }
+        if (!timeline.isEmpty()) {
+            for (Post post : timeline) {
+                post.showInList();
             }
+        } else {
+            System.out.println("nothing yet");
         }
     }
 
+//    public void lastSeen (long time)
+//    {
+//        Scanner scanner = new Scanner(System.in);
+//        if (duration.toDays() == 1)
+//            System.out.println("last seen : yesterday");
+//        else if (duration.toDays() > 7)
+//            System.out.println("last seen : a long time ago");
+//        else if (duration.toDays() > 1)
+//            System.out.println("last seen : several days ago");
+//        else if (duration.toHours() == 0)
+//            System.out.println("last seen : several minutes ago");
+//        else
+//            System.out.println("last seen : several hours ago");
+//    }
 
     public void showProfile()
     {

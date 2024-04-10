@@ -324,7 +324,6 @@ public class Reddit {
         user.addComments(comment);
     }
 
-
     public void creatPost(User creator , Subreddit subreddit)
     {
         Scanner scanner = new Scanner(System.in);
@@ -382,16 +381,7 @@ public class Reddit {
         return posts;
     }
 
-    public void SearchbyUUID (String query)
-    {
-        if (searchSubredditsbyUUID(query) != null){
-            searchSubredditsbyUUID(query).Show();
-        } else if (searchPostsbyUUID(query) != null){
-            searchPostsbyUUID(query).Show();
-        } else if (searchUsersbyNameUUID(query) != null){
-            searchUsersbyNameUUID(query).showProfile();
-        }
-    }
+
 
 
     public Subreddit searchSubredditsbyUUID(String query) {
@@ -407,15 +397,6 @@ public class Reddit {
         for (Post post : posts) {
             if (post.getUuid().toString().equals(query)) {
                 return (post);
-            }
-        }
-        return null;
-    }
-
-    public User searchUsersbyNameUUID(String query) {
-        for (User user : users) {
-            if (user.getUuid().toString().equals(query)) {
-                return (user);
             }
         }
         return null;

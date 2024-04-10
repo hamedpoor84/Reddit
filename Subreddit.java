@@ -170,16 +170,13 @@ public class Subreddit {
         posts.add(post);
         for (User user : users)
         {
-            Post[] update_timeline = user.getTimeline();
-            for (int i = 8 ; i >= 0 ; i--)
+            ArrayList<Post> update =user.getTimeline() ;
+            update.addFirst(post);
+            if (user.getTimeline().size() == 11)
             {
-                if (i != 0 )
-                {
-                    update_timeline[i+1] = update_timeline[i] ;
-                }
-                else {update_timeline[i] = post ;}
+                update.remove(10);
             }
-            user.setTimeline(update_timeline);
+            user.setTimeline(update);
         }
     }
 
