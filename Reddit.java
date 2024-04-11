@@ -61,7 +61,7 @@ public class Reddit {
 
 
     public void fakeRed (){
-    User user = new User("hamed" , "Hamedpoor84" , "hamed2384" , "hamedpoor84@gmail.com" , UUID.randomUUID());
+    User user = new User("hamed" , "Hamedpoor84" , "hhhhhhhh" , "hamedpoor84@gmail.com" , UUID.randomUUID());
     User user1 = new User("mobin" , "mobin84" , "mmmmmmmm" , "mobin@gmail.com" , UUID.randomUUID());
     User user2 = new User("amin" , "amin83" , "aaaaaaaa" , "aminghu@gmail.com" , UUID.randomUUID());
     users.add(user);

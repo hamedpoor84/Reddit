@@ -148,7 +148,7 @@ public class Main{
                 case "5" -> Subreddit(user, post.getSubreddit());
                 case "6" -> {
                     if (!post.getComments().isEmpty())
-                        Comment(user, Objects.requireNonNull(selectComment(user, post.getComments())))
+                        Comment(user, Objects.requireNonNull(selectComment(user, post.getComments())));
                     else {
                         System.out.println("nothing yet");
                     }
